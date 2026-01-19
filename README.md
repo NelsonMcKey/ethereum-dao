@@ -14,16 +14,16 @@ An ETH-holder-governed DAO that curates and deploys immutable, ownerless DeFi pr
 - Minimal or zero fees: if fees exist, they are burned.
 
 ## Documentation
-- `docs/index.md` for the full documentation set.
+- [Full documentation index](docs/index.md)
 - Key entry points:
-  - `docs/vision-brief.md`
-  - `docs/requirements-spec.md`
-  - `docs/governance-charter.md`
-  - `docs/primitive-selection-framework.md`
-  - `docs/deployment-program-spec.md`
-  - `docs/architecture-blueprint.md`
-  - `docs/security-threat-model.md`
-  - `docs/roadmap.md`
+  - [Vision Brief](docs/vision-brief.md)
+  - [Requirements Spec](docs/requirements-spec.md)
+  - [Governance Charter](docs/governance-charter.md)
+  - [Primitive Selection Framework](docs/primitive-selection-framework.md)
+  - [Deployment Program Spec](docs/deployment-program-spec.md)
+  - [Architecture Blueprint](docs/architecture-blueprint.md)
+  - [Security & Threat Model](docs/security-threat-model.md)
+  - [Roadmap & Milestones](docs/roadmap.md)
 
 ## Status
 Early design and documentation. No code or contracts deployed yet.
