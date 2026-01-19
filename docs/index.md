@@ -9,6 +9,7 @@
 - `docs/deployment-program-spec.md`
 - `docs/architecture-blueprint.md`
 - `docs/security-threat-model.md`
+- `docs/risk-register.md`
 - `docs/documentation-design-system.md`
 - `docs/roadmap.md`
 

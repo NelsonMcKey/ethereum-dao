@@ -23,6 +23,7 @@ An ETH-holder-governed DAO that curates and deploys immutable, ownerless DeFi pr
   - [Deployment Program Spec](docs/deployment-program-spec.md)
   - [Architecture Blueprint](docs/architecture-blueprint.md)
   - [Security & Threat Model](docs/security-threat-model.md)
+  - [Risk Register](docs/risk-register.md)
   - [Roadmap & Milestones](docs/roadmap.md)
 
 ## Status
