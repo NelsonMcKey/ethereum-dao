@@ -1,49 +1,45 @@
-# Vision Brief
+# Vision brief
 
 ## Mission
-Build an onchain DAO that stewards proven open-source DeFi primitives, deploys them as immutable, fee-free or minimal-fee services, and uses any fees solely to burn ETH for the benefit of ETH holders.
 
-## Problem Statement
-Most DeFi protocols end up centralized through owner controls, upgrade keys, or fee switches. This captures value for a small group and creates governance risk. We want an ETH-holder-governed DAO that curates and deploys immutable, ownerless DeFi services so the only economic outcome is ETH burn, not rent extraction.
+An ETH-holder DAO that curates immutable, ownerless DeFi deployments. It charges no protocol-level fee. User-to-user payments, such as AMM fees to liquidity providers and interest to lenders, stay with those users. If a protocol-level fee is ever charged, it is burned.
 
-## Core Principles
-- Ownerless by design: no admin keys, no upgrade proxies.
-- Minimal trust: onchain governance, transparent rules, auditable code.
-- ETH-only governance: anyone holding ETH can participate.
-- Open source first: contribute upstream where possible.
-- Minimal or zero fees: if fees exist, they are burned.
+The voting design is in [voting-mechanism.md](voting-mechanism.md). Unresolved choices are in [open-questions.md](open-questions.md).
 
-## Scope
-- Identify high-priority DeFi primitives to target.
-- Contribute to proven open-source implementations.
-- Fund and coordinate audits.
-- Deploy immutable contracts with ETH-burn mechanics (if fees exist).
-- Maintain an onchain registry of approved, immutable deployments.
+## Problem
 
-## Non-Goals
-- Launching a new token.
-- Extracting or redistributing protocol fees.
-- Running permissioned or upgradeable protocol deployments.
-- Building all primitives from scratch.
+Many DeFi systems keep an admin key, an upgrade proxy, or a fee switch. That key is a governance surface and a way to collect rent. This project keeps a list of deployments that have neither, and it refuses to add a rent switch of its own.
 
-## Target Users
-- ETH holders who want neutral, durable DeFi infrastructure.
-- Developers building or maintaining open-source DeFi primitives.
-- Integrators who need stable, immutable contracts.
+## What the DAO does
 
-## Success Metrics
-- Number of immutable primitives deployed.
-- Usage/TVL of deployed primitives.
-- ETH burned by protocol usage.
-- Governance participation rate (unique ETH voters).
+- Decide which existing deployments belong on an onchain registry.
+- Deploy a new copy only in the cases the [deployment program](deployment-program-spec.md) allows.
+- Maintain the registry: add an entry, or remove one.
 
-## Key Assumptions
-- Proven open-source codebases exist for the priority primitives.
-- Audits can be funded and coordinated by the DAO.
-- ETH-holder governance is sufficient to guide priorities.
+Removal does not stop a contract. It tells integrators the DAO no longer stands behind that address. After a deployment exists, that registry decision is most of the remaining governance surface, plus changes to governance parameters inside hardcoded floors.
 
-## Open Questions
-- How to define "proven code" (age, audits, TVL, usage)?
-- Best ETH voting mechanism: snapshot or continuous balance?
-- How to prevent governance capture without introducing centralization?
-- Minimum viable fee policy that still sustains operations?
+## What it does not do
+
+- Issue a token, hold a treasury, pay grants, or distribute fees.
+- Upgrade, pause, or take funds from a listed contract.
+- Set user-to-user fees to zero. An AMM with no fee to liquidity providers does not attract liquidity. Lending without interest does not attract lenders.
+- Treat "ETH burned" as a goal. The fee policy implies that little or nothing is burned. A burn target would push the DAO to turn a fee on.
+
+## Who it is for
+
+- ETH holders who want a public list of neutral, immutable deployments.
+- Integrators who need a stable address and a clear statement of what removal means.
+- Contributors who bring evidence about a deployment.
+
+## What would count as working
+
+- Registry entries that still pass the [selection gates](primitive-selection-framework.md).
+- Real usage of those deployments, measured by their own liquidity and volume, not by liquidity the DAO does not have.
+- Proposals that reach the quorum defined for the voting vault.
+- A reported break that is followed by a removal proposal. The timelock means this will be slow, and that slowness is part of the design.
+
+## Assumptions
+
+- Some deployments already exist that are immutable, ownerless, and useful. The registry's job is to name them, not to recreate them.
+- A new address starts with no lindy. Lindy is liquidity, integrators, and history on that deployment.
+- External groups, not this DAO, pay for any audits.

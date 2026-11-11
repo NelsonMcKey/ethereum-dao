@@ -1,43 +1,32 @@
-# Roadmap & Milestones
+# Roadmap
 
-## Purpose
-Define phases, milestones, and decision gates to reach the first immutable deployment.
+The sequence from this draft to a first registry entry. No dates. Contract work is out of scope for this repository.
 
-## Phase 1: Foundation
-- Finalize vision, requirements, governance charter.
-- Establish primitive selection framework and initial shortlist.
-- Define lindy thresholds and adoption metrics.
-- Deliverables: `vision-brief.md`, `requirements-spec.md`, `governance-charter.md`, `primitive-selection-framework.md`.
+## 1. Design draft (this repository)
 
-## Phase 2: Research & Selection
-- Complete research brief and evidence collection.
-- Score candidate primitives and select top 1–2.
-- Draft deployment program spec for chosen primitive.
-- Deliverables: `research-brief.md`, shortlist dossier, `deployment-program-spec.md`.
+Written: vision, requirements, voting recommendation, charter, selection gates, deployment rules, threat model, and one worked dossier.
 
-## Phase 3: Design & Spec
-- Produce PRD and technical spec.
-- Create governance UI wireframes and flows.
-- Finalize security model and architecture blueprint.
-- Deliverables: `prd.md`, `technical-spec.md`, `architecture-blueprint.md`, `security-threat-model.md`, design assets.
+Waiting: the owner decisions in [open questions](open-questions.md), in particular whether the voting vault is accepted and what the numeric parameters are.
 
-## Phase 4: Governance & Deployment Readiness
-- Configure governance contracts and registry schema (spec-only).
-- Prepare reproducible build and verification tooling.
-- Finalize deployment parameters and bytecode artifacts.
-- Deliverables: governance spec addendum, verification checklist, deployment package.
+## 2. Evidence
 
-## Phase 5: First Immutable Deployment
-- Governance vote to approve deployment.
-- Deploy immutable contracts and verify bytecode.
-- Add to registry with metadata and references.
-- Deliverables: onchain deployment, registry entry, public announcement.
+Run another dossier only after the owner names a primitive. Do not treat the constant-product AMM dossier as a listing. It is a worked refusal.
 
-## Decision Gates
-- Gate 1: Lindy and adoption thresholds satisfied.
-- Gate 2: Immutability feasibility confirmed.
-- Gate 3: Governance approval and timelock complete.
+## 3. Spec freeze
 
-## Ongoing Cadence
-- Quarterly review of new primitives.
-- Maintain registry accuracy and deprecate broken deployments.
+Lock the vault, governor, and registry interfaces in the [technical spec](technical-spec.md) once the open numbers exist. Until then those interfaces stay drafts.
+
+## 4. Implementation (not this repo)
+
+Contracts, tests, and a reproducible build. A UI can follow. The UI is not required for the vote to be valid.
+
+## 5. First registry action
+
+A proposal, a vault vote, a timelock, and either an `add` of an existing address or a new deployment that the deployment program allows. Both outcomes are allowed to be "no."
+
+## Gates before that action
+
+- The owner has accepted a voting design.
+- Quorum, threshold, periods, and floors are numbers, not placeholders.
+- The candidate passes the selection gates on cited evidence.
+- For a new deployment, the proposal states that lindy starts at zero.

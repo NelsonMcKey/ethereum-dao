@@ -1,31 +1,40 @@
-# Documentation & Design System
+# Documentation guide
 
-## Purpose
-Define the documentation set and UX design work needed before building the DAO and its governance interface.
+How these docs are organized. The mission is stated in the [vision brief](vision-brief.md) and is not repeated as a preface in every file.
 
-## Documentation Set
-- **PRD**: product goals, scope, success metrics, and key user flows.
-- **Technical Spec**: contract interfaces, governance flows, registry schema.
-- **Governance Charter**: finalized voting rules and proposal lifecycle.
-- **Security Model**: threat model and invariants.
-- **Contribution Guide**: how developers propose, contribute, and verify codebases.
+## Rules
 
-## UX/UI Design Outputs
-- Information architecture for core pages (home, proposals, registry, primitive detail).
-- End-to-end governance flows (nominate → evidence → vote → deploy → registry).
-- UI components: proposal cards, evidence panels, deployment verification, burn dashboard.
-- Accessibility and simplicity standards for ETH-holder governance.
+- Each doc opens with the job of that doc, in a sentence or two, then links outward.
+- Open decisions live only in [open-questions.md](open-questions.md).
+- The fee policy is specified in the [requirements](requirements-spec.md). Other docs link to it.
+- Voting is specified in the [voting mechanism](voting-mechanism.md).
+- Claims about deployments cite a source. Unverified points are labeled.
 
-## Prototypes
-- Low-fidelity wireframes for all major flows.
-- High-fidelity prototype for proposal creation and voting.
+## Set
 
-## Content Standards
-- Clear, neutral language; emphasize immutability and ETH-burn economics.
-- Consistent terminology (primitive, deployment, registry, lindy criteria).
+| Doc | Job |
+| --- | --- |
+| [Vision brief](vision-brief.md) | Mission, non-goals, success signals. |
+| [Requirements](requirements-spec.md) | Requirements, fee policy, license rule. |
+| [Voting mechanism](voting-mechanism.md) | How ETH votes, and the options that were rejected. |
+| [Governance charter](governance-charter.md) | What votes can do, including removal. |
+| [Selection framework](primitive-selection-framework.md) | Gates and weights. |
+| [Deployment program](deployment-program-spec.md) | When to list, when to deploy, oracle limit. |
+| [Dossier](dossiers/amm-constant-product.md) | The framework applied to one primitive. |
+| [Architecture](architecture-blueprint.md) | Components and invariants. |
+| [Technical spec](technical-spec.md) | Draft interfaces. |
+| [PRD](prd.md) | Flows and metrics for an implementer. |
+| [Threat model](security-threat-model.md) | Attacks and accepted limits. |
+| [Risk register](risk-register.md) | Operational risks. |
+| [Research brief](research-brief.md) | Prior art the draft uses. |
+| [Roadmap](roadmap.md) | Sequence from this draft to a first registry action. |
+| [Contribution guide](contribution-guide.md) | How to nominate. |
+| [Open questions](open-questions.md) | Owner decisions still open. |
 
-## Deliverables
-- `docs/prd.md`
-- `docs/technical-spec.md`
-- `docs/contribution-guide.md`
-- `design/` folder with IA, flows, and wireframes
+## UI
+
+Wireframes and a governance UI are not part of this repository. When a UI exists, it should use the same words as the charter: registry, removal as a signal, vault deposit, timelock. Canonical state stays onchain if the UI is down.
+
+## License
+
+Documentation is CC BY 4.0. See the repository `LICENSE`. Code discussed in a dossier keeps the license of that code.

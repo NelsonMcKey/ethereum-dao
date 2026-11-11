@@ -1,43 +1,32 @@
-# Security & Threat Model
+# Security and threat model
 
-## Purpose
-Identify threats, attack vectors, and mitigations for an ETH-holder-governed DAO that deploys immutable, ownerless DeFi primitives with minimal or zero fees and ETH burn.
+Threats to the registry and the voting system. The economic policy is in the [requirements](requirements-spec.md).
 
-## Threat Categories
-- **Governance Capture**
-  - Whale dominance or coordination to pass harmful proposals.
-  - Mitigation: quorum thresholds, timelocks, transparent proposal data.
-- **Proposal Spam**
-  - Flooding governance with low-quality proposals.
-  - Mitigation: proposal templates, sponsorship or minimum stake for submission.
-- **Malicious Code Selection**
-  - Proposing a codebase with hidden controls or backdoors.
-  - Mitigation: lindy criteria, reproducible builds, public bytecode review.
-- **Deployment Misconfiguration**
-  - Incorrect parameters leading to unsafe behavior.
-  - Mitigation: published configuration and deterministic deployment.
-- **Registry Poisoning**
-  - Unauthorized registry updates or listing of non-immutable deployments.
-  - Mitigation: registry updates only via governance execution.
-- **Dependency Risk**
-  - External oracle or library failures.
-  - Mitigation: minimize dependencies and document trust assumptions.
+## Threats
 
-## Invariants to Protect
-- Deployments are immutable and ownerless.
-- Fees, if any, are burned.
-- Registry entries are verifiable and reproducible.
-- Governance execution is time-delayed and transparent.
+| Threat | What happens | Response in this design |
+| --- | --- | --- |
+| Flash-loaned vote | ETH is borrowed and repaid inside the voting transaction. | Weight is a vault checkpoint from the proposal block, so the intra-transaction balance is irrelevant. |
+| Borrowed ETH around a snapshot | The attacker holds ETH only for the snapshot block. | The vault's withdrawal delay is at least the voting period plus the timelock. A one-block borrow cannot enter and exit in time. A loan that outlasts the delay still votes. |
+| Exchange or custodian deposits | Customer ETH is deposited and voted. | Visible onchain. No contract-level distinction between customer and house funds. Accepted. |
+| Whale control of a small vault | Quorum is a fraction of deposits, so a large depositor in a quiet vault passes votes alone. | Public timelock. Quorum fraction is an open parameter and has to be set with this failure in mind. |
+| Proposal spam | Empty proposals crowd the queue. | A minimum vault deposit to propose. The number is open. |
+| Malicious listing | A contract with a hidden admin or a lookalike address is registered. | Gates, published bytecode evidence, timelock. Integrators still have to read the address. |
+| Registry poisoning | A direct write to the list. | Only the governor can write, and only after a successful vote and timelock. |
+| Live exploit in a listed contract | Funds are at risk now. | No pause and no patch. Removal is a signal and arrives after the timelock. Users who can exit do so on their own. |
+| Dependency capture | An oracle admin or a proxy on a dependency changes behavior the listing cannot stop. | The ownerless gate applies to those dependencies. Oracle-dependent systems usually fail it. |
+| Vote buying | A bribe buys a delegation. | Delegation is public. Bribes are not prevented. |
 
-## Operational Risks
-- Governance participation fatigue.
-- Slow decision cycles in emergencies.
-- Limited resources for security review beyond lindy signals.
+## Invariants
 
-## Risk Acceptance
-- The DAO accepts reduced audit coverage in exchange for reliance on proven, long-running codebases.
-- Emergency response is governance-only; no admin keys.
+- Listed deployments and the vault have no admin.
+- Protocol-level fees are absent or burned. User-to-user fees are untouched.
+- Registry entries are added and removed only through the governor.
+- Execution waits for the timelock.
 
-## Open Questions
-- Anti-sybil measures for ETH-holder voting.
-- Minimum lindy thresholds for different primitive types.
+## What this project accepts
+
+- No DAO-funded audit program, because there is no treasury. A review paid for by someone else can be evidence. It is not a gate, and it is not something this DAO can promise.
+- Reduced ability to respond during an incident. The alternative was an admin key, which this project rejects.
+- Staked ETH, LST holders, and WETH holders do not vote unless they unwrap and deposit native ETH.
+- Low turnout. Carbonvote is the historical shape of ETH-balance signaling, described in the [voting mechanism](voting-mechanism.md).

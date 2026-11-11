@@ -1,76 +1,63 @@
-# Risk Register
+# Risk register
 
-## Purpose
-Capture key risks and practical mitigations for the DAO’s model.
+Practical risks of the model in the [vision brief](vision-brief.md). Mitigations that need a number point at [open questions](open-questions.md).
 
-## Risks and Mitigations
+### 1. A small vault is easy to capture
 
-### 1) Plutocratic ETH Governance
-**Risk:** ETH-holder voting can be dominated by whales, recreating centralization.
-**Mitigations:**
-- Support delegation to enable broader coordination.
-- Use quorum and time-locked votes to allow counter-mobilization.
-- Consider quadratic or capped voting for select proposal types.
+**Risk.** Quorum is a share of deposits. If few people deposit, one holder clears quorum.
 
-### 2) No Treasury, No Sustained Funding
-**Risk:** Without a treasury, ongoing research and maintenance may stall.
-**Mitigations:**
-- Keep scope narrow and low-maintenance by design.
-- Seek external, one-off grants or donations (not DAO-held).
-- Encourage ecosystem sponsorships for research and verification.
+**Mitigation.** Long timelock, public proposals, and a quorum fraction chosen with a nearly empty vault in mind. No quadratic weighting: that needs identity, and this project will not add one.
 
-### 3) Lindy Does Not Guarantee Safety
-**Risk:** Long-lived code can still break under new conditions.
-**Mitigations:**
-- Define minimum lindy thresholds with objective metrics.
-- Compare multiple independent implementations when possible.
-- Maintain a deprecation path via registry removal.
+### 2. Most ETH cannot vote
 
-### 4) Immutability Prevents Fixes
-**Risk:** Critical bugs cannot be patched on immutable deployments.
-**Mitigations:**
-- Require clean migration paths and registry versioning.
-- Use registry-level removal rather than contract-level control.
-- Publish emergency redeploy playbooks.
+**Risk.** Staked ETH and WETH are outside the vault. The electorate is execution-layer ETH that someone chose to deposit. Large holders of liquid ETH are over-represented relative to stakers.
 
-### 5) Minimal Fees May Be Unsustainable
-**Risk:** Lack of fees reduces incentives for long-term stewardship.
-**Mitigations:**
-- Prioritize primitives with near-zero operational cost.
-- Allow minimal fees strictly for burn mechanics where needed.
-- Favor primitives with strong existing maintainer ecosystems.
+**Mitigation.** Say so in the voting docs. Do not paper over it by counting LST tokens, which would trust the issuer.
 
-### 6) Burn Economics May Not Align Users
-**Risk:** Users may not care about ETH burn vs direct utility.
-**Mitigations:**
-- Require demonstrated real-world usage and demand.
-- Emphasize reliability and neutrality in UX and docs.
-- Use adoption as a hard gate for deployment.
+### 3. Custodians vote customer funds
 
-### 7) Dependency Risk (Oracles, Libraries)
-**Risk:** External dependencies can reintroduce trust or upgrade risk.
-**Mitigations:**
-- Prefer primitives with minimal external dependencies.
-- Require dependency maps and explicit trust assumptions.
-- Limit eligibility for protocols depending on upgradeable components.
+**Risk.** An exchange can deposit ETH it holds for customers.
 
-### 8) Governance Overhead and Apathy
-**Risk:** Low participation and slow decisions reduce effectiveness.
-**Mitigations:**
-- Standardize proposal templates to reduce burden.
-- Batch routine proposals to reduce vote fatigue.
-- Tune quorum dynamically by proposal criticality.
+**Mitigation.** Deposits are public. There is no technical separation. Accept the risk or abandon balance-weighted voting.
 
-### 9) Regulatory Uncertainty
-**Risk:** Governance and deployment activities may attract scrutiny.
-**Mitigations:**
-- Avoid revenue distribution and token issuance.
-- Maintain transparent, public governance records.
-- Document non-custodial, non-profit intent and operation.
+### 4. No treasury means no paid work
 
-### 10) Attack Surface (Capture, Registry Poisoning)
-**Risk:** Malicious proposals or social engineering can corrupt registry.
-**Mitigations:**
-- Enforce timelocks and public review windows.
-- Allow registry changes only via onchain execution.
-- Require strict evidence and metadata standards for proposals.
+**Risk.** Research, reviews, and UI work have no budget.
+
+**Mitigation.** Keep the scope to a registry and rare deployments. Audits and writeups are paid by whoever wants them, outside the DAO. The DAO does not receive or spend that money.
+
+### 5. Lindy does not copy into a new address
+
+**Risk.** A fork of old code is a new system with no liquidity and no track record. A bug that was harmless at one size can show up at another.
+
+**Mitigation.** Score the deployment, not the repository. Prefer listing an existing address. Deploy new code only under the [deployment program](deployment-program-spec.md).
+
+### 6. Immutable contracts stay broken
+
+**Risk.** A bug cannot be patched.
+
+**Mitigation.** Registry removal warns integrators after the timelock. It does not move funds or stop the contract. Users exit on their own if the contract lets them.
+
+### 7. Zero protocol fees are mistaken for zero LP fees
+
+**Risk.** A literal reading of "zero fee" would ship an AMM nobody provisions, or a lending market nobody funds.
+
+**Mitigation.** The [fee policy](requirements-spec.md) leaves user-to-user payments in place and refuses protocol rent. Burned ETH is not a success metric, so there is no pressure to switch a fee on.
+
+### 8. Oracle admins re-enter through the side door
+
+**Risk.** A renounced core that reads an owned price proxy is still owned, one contract away.
+
+**Mitigation.** The ownerless gate includes dependencies. Liquity v1 fails it, as written up in the deployment program.
+
+### 9. Low participation
+
+**Risk.** Votes do not reach quorum, or a motivated minority always does.
+
+**Mitigation.** Narrow proposal surface, one template, and parameter floors so a single quiet vote cannot set the timelock to zero. Exact quorum is open.
+
+### 10. Regulatory attention
+
+**Risk.** Operating a registry and deploying contracts may draw scrutiny even without a token or revenue.
+
+**Mitigation.** No token sale, no fee distribution, no custody of user funds by the DAO, and a public record of votes. This is not legal advice.

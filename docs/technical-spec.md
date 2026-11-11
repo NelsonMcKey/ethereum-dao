@@ -1,104 +1,64 @@
-# Technical Spec
+# Technical spec
 
-## Overview
-This document defines the technical interfaces and data flows for an ETH-holder-governed DAO that curates and deploys immutable, ownerless DeFi primitives with minimal or zero fees that burn ETH.
+Draft interfaces. They become normative after the owner sets the numbers in [open questions](open-questions.md). This file describes shapes. It is not a contract.
 
-## Core Contracts
+## Voting vault
 
-### Governance
-**Purpose:** manage proposal lifecycle, voting, and execution.
+Holds native ETH. The internal receipt is non-transferable and is not a token listing.
 
-**Key capabilities:**
-- Create proposals referencing offchain evidence and onchain actions.
-- Snapshot or checkpoint ETH balances for voting power.
-- Enforce quorum, thresholds, and timelocks.
+Draft calls:
 
-**State (Draft):**
-- `Pending` → `Active` → `Queued` → `Executed` or `Defeated`
+- `deposit()` payable. Credits the sender and writes a checkpoint.
+- `startWithdraw(uint256 amount)` and `finishWithdraw()`. `finishWithdraw` succeeds only after the delay. Voting power includes the ETH until `finishWithdraw`. The delay is at least the voting period plus the timelock.
+- `delegate(address to)`. Moves voting power. Does not move ETH.
+- `getPastVotes(address account, uint256 blockNumber)`.
 
-**Interfaces (Draft):**
-- `propose(metadataURI, actions)`
-- `vote(proposalId, support)`
-- `execute(proposalId)`
+No admin, no fee, no transfer, no approval.
 
-**Events (Draft):**
-- `ProposalCreated(proposalId, proposer, metadataURI)`
-- `VoteCast(proposalId, voter, support, weight)`
-- `ProposalQueued(proposalId, eta)`
-- `ProposalExecuted(proposalId)`
+## Governor
 
-### Primitive Registry
-**Purpose:** canonical list of approved immutable deployments.
+Draft calls:
 
-**Key fields:**
-- `deploymentAddress`
-- `commitHash`
-- `metadataURI`
-- `createdAt`
+- `propose(address[] targets, bytes[] calldatas, string metadataURI)`. Snapshot block is the proposal block. The proposer needs the minimum vault balance at that block.
+- `castVote(uint256 proposalId, uint8 support)`. Weight is `getPastVotes` at the snapshot. Support is yes, no, or abstain.
+- `queue(uint256 proposalId)` and `execute(uint256 proposalId)`.
 
-**Interfaces (Draft):**
-- `addDeployment(address, commitHash, metadataURI)`
-- `removeDeployment(address, reason)`
-- `getDeployment(address)`
+State: `Pending → Active → Defeated`, or `Pending → Active → Queued → Executed` or `Expired`.
 
-**Events (Draft):**
-- `DeploymentAdded(deploymentAddress, commitHash)`
-- `DeploymentRemoved(deploymentAddress, reason)`
+Quorum uses vault ETH at the snapshot as the denominator. Parameter changes are themselves proposals, and they revert if they cross the floors.
 
-### Deployment Factory
-**Purpose:** create deterministic, immutable deployments where feasible.
+## Registry
 
-**Key capabilities:**
-- Enforce immutable configuration at deploy.
-- Emit deployment metadata.
-- Optional CREATE2 deterministic address support.
+Draft fields: deployment address, metadata URI, listed-at block.
 
-**Interfaces (Draft):**
-- `deploy(bytes deploymentParams) returns (address)`
-- `predictAddress(bytes deploymentParams) returns (address)` (optional)
+Draft calls, governor-only:
 
-**Events (Draft):**
-- `Deployed(deploymentAddress, paramsHash)`
+- `add(address deployment, string metadataURI)`
+- `remove(address deployment, string reason)`
 
-### Fee Burn Adapter
-**Purpose:** route any protocol fees to ETH burn.
+`remove` updates the registry and emits the reason. It does not call `deployment`. A removed address can be added again only by a new proposal. Metadata is evidence, not an instruction the contract interprets.
 
-**Key capabilities:**
-- Accept ETH fees and send to a burn sink.
-- Surface burn metrics.
+## Factory
 
-**Interfaces (Draft):**
-- `burn()`
-- `burnedTotal()`
+Optional. `deploy(bytes params) returns (address)`. Params are fixed in the creation transaction: no owner, protocol-fee setter is the zero address. The factory does not retain a role on the created contract. Listings of contracts the factory did not create skip this component.
 
-**Events (Draft):**
-- `Burned(amount)`
+## Burn path
 
-## Data Flow
-- Nomination → Governance proposal with `metadataURI`.
-- Vote → Timelock → Execution.
-- Execution adds registry entry and triggers deployment (if factory-based).
+`burn()` sends this DAO's protocol-level ETH fee to a burn sink. There is no function that sets the sink. Deployments with a zero protocol fee do not wire this in. The path is not used to take LP fees or interest.
 
-## Data Structures (Draft)
-- `Proposal`: metadataURI, actions[], startBlock, endBlock, quorum, threshold, state.
-- `DeploymentMetadata`: commitHash, metadataURI, createdAt.
+## Events
 
-## Minimal State Diagram (Governance)
-```
-Pending -> Active -> Queued -> Executed
-                 \-> Defeated
-```
+- Vault: `Deposited`, `WithdrawStarted`, `WithdrawFinished`, `DelegateChanged`.
+- Governor: `ProposalCreated`, `VoteCast`, `ProposalQueued`, `ProposalExecuted`.
+- Registry: `DeploymentAdded`, `DeploymentRemoved`. The removal event carries the reason string.
 
-## Offchain Components
-- Evidence repository (metadataURIs).
-- Reproducible build scripts and bytecode verification tooling.
-- Governance UI and registry explorer.
+## Offchain
+
+`metadataURI` points at the evidence package. The package can be wrong. The registry's endorsement is the onchain add. Consumers who need bytecode certainty re-check the code at the address.
 
 ## Invariants
-- No admin keys or upgrades in deployed primitives.
-- Registry updates only via governance execution.
-- Fees, if any, are burned.
 
-## Open Questions
-- ETH voting implementation details (snapshot vs checkpoint).
-- Factory feasibility for complex primitives.
+- No admin on the vault, the factory's children, or listed primitives.
+- Registry writes come from the governor after a timelock.
+- `remove` has no effect on the target account's code or balance.
+- User-to-user fees are not an input to these contracts.

@@ -1,0 +1,14 @@
+Documentation in this repository is licensed under the Creative Commons
+Attribution 4.0 International License (CC BY 4.0).
+
+https://creativecommons.org/licenses/by/4.0/
+
+You may copy, share, and adapt the documentation, including commercially,
+if you give appropriate credit, provide a link to the license, and indicate
+whether you made changes. You may do so in any reasonable manner.
+
+This license covers the prose in this repository. It does not license smart
+contract code that the docs discuss. That code stays under its own license.
+Uniswap v2 core and Liquity v1, for example, are published under GPL-3.0.
+
+Copyright 2026 the documentation contributors.
