@@ -1,45 +1,33 @@
-# Contribution Guide
+# Contribution guide
 
-## Purpose
-Explain how the community nominates primitives, provides evidence, and proposes immutable deployments.
+How to nominate a deployment and how to disagree with one. Voting rules are in the [charter](governance-charter.md). The evidence bar is the [selection framework](primitive-selection-framework.md).
 
-## Who Can Contribute
-- Anyone can submit research, evidence, or documentation.
-- ETH holders can submit onchain proposals.
+## Who can contribute
 
-## Contribution Types
-- Primitive nominations and evidence packages.
-- Security and lindy analysis.
-- Codebase reviews for immutability feasibility.
-- Deployment parameter reviews and verification.
+Anyone can submit research and dossiers. Submitting an onchain proposal requires the vault minimum, once that minimum exists.
 
-## Nomination Checklist
-- Clear description of the primitive and its use cases.
-- Evidence of adoption (usage, volume/TVL, integrator count).
-- Lindy indicators (age, survival through cycles).
-- Codebase license and repository references.
-- Known incidents and mitigations.
+## What to submit
 
-## Proposal Template (Minimum)
-- **Title**
-- **Summary**
-- **Codebase reference** (repo + commit range)
-- **Evidence** (adoption metrics, lindy history)
-- **Immutability review** (admin keys removed, upgrade paths absent)
-- **Deployment parameters** (fee/burn settings, config)
-- **Verification plan** (build and bytecode checks)
+- A nomination of an existing address, or a request to deploy, with the reason a new address is justified.
+- A correction of a cited fact, with the source.
+- A gate review: owner, proxy, fee setter, dependencies, license.
 
-## Review Process
-- Community review for completeness and accuracy.
-- Governance vote for approval.
-- Registry update post-deployment.
+## Nomination contents
 
-## Evidence Standards
-- Prefer primary sources (onchain data, official repos).
-- Cite sources for metrics and historical incidents.
-- Keep claims verifiable.
+- Primitive and what users pay each other, as distinct from any protocol fee.
+- Address, chain, and creation transaction.
+- Repository, tag or commit, and license name with a link to the license file.
+- Gate results, each with the read or the file that supports it.
+- Scores with the figures behind them. Say what was not measured.
+- Known incidents, or an explicit statement that a search found none, which is not the same as a clean history.
+- For a new deployment: init parameters and the statement that liquidity starts at zero.
 
-## Code of Conduct
-- Be factual and transparent.
-- Disclose conflicts of interest.
-- No promotional or misleading claims.
+The [constant-product AMM dossier](dossiers/amm-constant-product.md) is the worked example, including a recommendation not to list.
+
+## Evidence
+
+Use primary sources: repository, license file, deployment transaction, onchain call, project post. Name the block number for onchain reads. Mark anything you did not re-check. Do not import a TVL or a turnout figure you cannot reproduce.
+
+## Conduct
+
+State the claim and the source. Disclose if you are paid by the system under review. Do not describe a registry removal as a way to stop a contract.

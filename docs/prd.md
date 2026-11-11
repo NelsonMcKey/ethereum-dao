@@ -1,61 +1,47 @@
 # PRD
 
-## Summary
-An ETH-holder-governed DAO that identifies proven, useful DeFi primitives, contributes to their open-source development, and deploys immutable, ownerless, minimal-fee (or fee-free) contracts that burn ETH.
+What an implementer is building. Goals and non-goals match the [vision brief](vision-brief.md) and the [requirements](requirements-spec.md).
 
 ## Goals
-- Deliver immutable, ownerless deployments of high-priority DeFi primitives.
-- Ensure real-world usefulness and adoption.
-- Provide ETH-burn economics as the sole value flow.
-- Maintain simple, transparent governance for ETH holders.
 
-## Non-Goals
-- Launching a token.
-- Running a treasury or distributing fees.
-- Permissioned control, admin keys, or upgrade paths.
+- A registry of immutable, ownerless deployments that integrators can read onchain.
+- A voting vault and governor that let deposited ETH add or remove entries, after a timelock.
+- A fee policy that leaves LP fees and interest alone and takes no protocol fee.
+
+## Non-goals
+
+- A token, a treasury, a grants program, or a fee switch that pays anyone.
+- Admin keys, pauses, or upgrades on listed primitives.
+- Binding offchain votes.
+- Representing staked ETH or WETH in v1.
 
 ## Users
-- ETH holders who want neutral, long-lived DeFi infrastructure.
-- Developers seeking durable primitives to integrate.
-- Open-source contributors who want to steward proven code.
 
-## Core User Flows
-1. **Nominate a primitive**
-   - Submit a proposal with evidence of adoption and lindy status.
-2. **Review and score**
-   - Community review using the selection framework.
-3. **Vote and approve**
-   - ETH-holder governance vote.
-4. **Deploy and verify**
-   - Immutable deployment with verifiable bytecode.
-5. **Registry listing**
-   - Public registry entry for integration.
+- ETH holders who deposit and vote.
+- Integrators reading the registry.
+- Contributors assembling evidence.
 
-## Functional Requirements
-- ETH-holder voting with snapshot/checkpoint mechanism.
-- Onchain proposal lifecycle with timelock.
-- Immutable deployment factory (where feasible).
-- Onchain registry of approved deployments.
-- Fee policy: zero or minimal, and burned.
+## Flows
 
-## Non-Functional Requirements
-- Immutability and ownerlessness enforced.
-- Transparent, auditable deployment process.
-- Reproducible builds and bytecode verification.
-- High signal-to-noise governance UX.
+1. **Nominate.** An evidence package names an address, a commit, a license, and gate results. The [AMM dossier](dossiers/amm-constant-product.md) is the pattern.
+2. **Screen.** Gates, then scores. A failed gate is the end of that proposal.
+3. **Vote.** Vault holders vote on the snapshot checkpoint. An offchain poll may precede this and does not count.
+4. **Execute.** After the timelock, the registry adds or removes the address. A new deployment, when justified, is deployed and then added.
+5. **Use.** Integrators read the registry. They still verify bytecode. Removal is a signal, not a kill switch.
+
+## Requirements
+
+Covered in the requirements spec, the voting mechanism, and the technical spec. This PRD does not restate interfaces.
 
 ## Metrics
-- # of primitives deployed.
-- Usage/TVL for deployments.
-- ETH burned.
-- Governance participation rate.
+
+- Entries that still pass the gates.
+- Usage of listed deployments.
+- Proposals that meet quorum.
+- Time from a public incident report to a removal transaction, which includes the timelock on purpose.
+
+ETH burned is not a metric.
 
 ## Risks
-- Governance capture by large ETH holders.
-- Slow or low participation.
-- Over-reliance on lindy without audits.
-- Misconfiguration of deployments.
 
-## Open Questions
-- Exact voting mechanism and quorum thresholds.
-- Minimum lindy/adoption thresholds for eligibility.
+Capture of a small vault, low turnout, immutable bugs, and oracle dependencies. Detail is in the [risk register](risk-register.md) and the [threat model](security-threat-model.md).

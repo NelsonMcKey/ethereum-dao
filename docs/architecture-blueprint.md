@@ -1,46 +1,35 @@
-# Architecture Blueprint
+# Architecture
 
-## Purpose
-Describe the high-level system architecture for an ETH-holder-governed DAO that curates and deploys immutable, ownerless DeFi primitives with minimal or zero fees that burn ETH.
+Components and the boundary between canonical state and everything else. Behavior of voting is in the [voting mechanism](voting-mechanism.md). Removal is in the [charter](governance-charter.md).
 
-## Onchain Components
-- **Governance Contract**
-  - Proposal creation, voting, and execution with timelock.
-  - ETH-holder voting mechanism (snapshot or checkpoint based).
-- **Primitive Registry**
-  - Onchain list of approved immutable deployments.
-  - Metadata: commit hash, deployment params, verification links.
-- **Deployment Factory**
-  - Deterministic deployments (CREATE2) where possible.
-  - Enforces immutable configuration and burn-only fee policy.
-- **Fee Burn Mechanism**
-  - Any protocol fees are routed to an ETH burn sink.
+## Onchain
 
-## Offchain Components
-- **Documentation Portal**
-  - Houses proposals, evidence, and deployment artifacts.
-- **Governance UI**
-  - Proposal creation, voting, and registry browsing.
-- **Research Pipeline**
-  - Tracks lindy and adoption metrics for candidate primitives.
-- **Verification Tooling**
-  - Reproducible build scripts and bytecode comparison.
+- **Voting vault.** Holds ETH. Checkpoints deposits. Non-transferable receipt. Withdrawal delay. No admin.
+- **Governor.** Creates proposals, reads vault checkpoints at a snapshot block, enforces quorum and threshold, queues execution behind a timelock.
+- **Registry.** The list of endorsed addresses and the metadata hash for each. `add` and `remove` are the normal governor payloads. `remove` does not call the listed contract.
+- **Optional factory.** Used only when a new deployment is justified. It does not wrap, upgrade, or custody an existing system. A listing does not have to come out of this factory.
+- **Burn path.** Present only if a deployment this DAO controls charges a protocol-level fee. It has no setter. It is unused when the fee is zero, which is the default.
 
-## Data Flow
-- Nomination → evidence upload → governance proposal.
-- Vote approval → deployment via factory → registry update.
-- Registry update → public discoverability and integration.
+## Offchain
 
-## Trust Boundaries
-- No admin keys for deployed primitives.
-- Governance is the only control surface for registry changes.
-- Offchain tooling is informational; onchain state is canonical.
+- Docs and evidence, including dossiers.
+- A UI for proposing, voting, and reading the registry. The UI is not canonical. A missing UI does not stop an onchain vote.
+- Reproducible build scripts for anything this DAO deploys.
 
-## Key Invariants
-- Deployed primitives are immutable and ownerless.
-- Fees, if any, are burned.
-- Registry entries map to verifiable, reproducible deployments.
+An offchain temperature check may use Snapshot-style signatures. Those signatures are not an input to the governor.
 
-## Open Questions
-- Exact ETH voting mechanism and anti-sybil measures.
-- Whether factory enforcement is feasible for all primitives.
+## Flow
+
+Nominate with evidence → gate review → onchain proposal → vault vote at the snapshot checkpoint → timelock → `add` or `remove`, or a factory deploy followed by `add`.
+
+## Trust boundary
+
+Listed primitives and the vault have no admin. The governor is the only writer of the registry, and only after a timelock. Offchain text can be wrong. The registry entry is the endorsement, and the contract's own code is the behavior.
+
+## Invariants
+
+- A listed primitive is immutable and ownerless, including the dependencies the gates cover.
+- User-to-user fees are not redirected.
+- A protocol-level fee under this DAO's control is either absent or burned.
+- Vault ETH returns only to the depositor.
+- A registry removal changes the list and nothing else.

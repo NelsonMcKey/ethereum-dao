@@ -1,30 +1,24 @@
 # Ethereum DAO
 
-An ETH-holder-governed DAO that curates and deploys immutable, ownerless DeFi primitives with minimal or zero fees, where any fees are burned to benefit ETH holders.
+Design notes for an ETH-holder DAO that keeps an onchain registry of immutable, ownerless DeFi deployments.
 
-## What This Repo Is
-- Planning and documentation for the DAO.
-- A structured process for selecting proven, useful DeFi primitives.
-- Specifications for immutable deployments and onchain registry governance.
+The registry does not extract a protocol fee. Fees that users pay each other — LP fees, interest — stay with those users. A protocol-level fee, if one is ever charged on a deployment this DAO controls, is burned. Listing an existing deployment is the default. A new deployment is a rare exception, because a new address has no liquidity and no history.
 
-## Core Principles
-- Ownerless by design: no admin keys or upgrade proxies.
-- ETH-only governance: any ETH holder can participate.
-- Lindy-first security: prioritize long-running, proven code.
-- Minimal or zero fees: if fees exist, they are burned.
+## Principles
+
+- Ownerless deployments: no admin key and no upgrade proxy, including on dependencies such as oracles.
+- Voting by deposited ETH, with the weight taken from a past checkpoint. The design is in [docs/voting-mechanism.md](docs/voting-mechanism.md). Raw wallet balances are not votes.
+- Lindy belongs to a deployment, not to a source repository.
+- OSI-approved licenses that allow deployment. GPL-3.0 qualifies.
 
 ## Documentation
-- [Full documentation index](docs/index.md)
-- Key entry points:
-  - [Vision Brief](docs/vision-brief.md)
-  - [Requirements Spec](docs/requirements-spec.md)
-  - [Governance Charter](docs/governance-charter.md)
-  - [Primitive Selection Framework](docs/primitive-selection-framework.md)
-  - [Deployment Program Spec](docs/deployment-program-spec.md)
-  - [Architecture Blueprint](docs/architecture-blueprint.md)
-  - [Security & Threat Model](docs/security-threat-model.md)
-  - [Risk Register](docs/risk-register.md)
-  - [Roadmap & Milestones](docs/roadmap.md)
+
+- [Index](docs/index.md)
+- Start here: [Vision](docs/vision-brief.md), [Voting](docs/voting-mechanism.md), [Selection framework](docs/primitive-selection-framework.md), [Open questions](docs/open-questions.md)
+- Worked example: [Constant-product AMM dossier](docs/dossiers/amm-constant-product.md)
 
 ## Status
-Early design and documentation. No code or contracts deployed yet.
+
+Design draft only. No contracts. Several decisions are still with the owner, listed in [docs/open-questions.md](docs/open-questions.md). The AMM dossier recommends neither listing Uniswap v2 nor redeploying it.
+
+Documentation is [CC BY 4.0](LICENSE).
